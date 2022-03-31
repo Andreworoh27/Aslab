@@ -249,15 +249,22 @@ void menu(){
     switch (input)
     {
     case 1:
+        system("cls");
         ViewClass();
+        puts("press enter to continue...");getchar();
+        system("cls");
         menu();
         break;
     case 2:
+        system("cls");
         BorrowRoom();
+        system("cls");
         menu();
         break;
     case 3:
+        system("cls");
         ReturnRoom();
+        system("cls");
         menu();
     case 4:
         puts("thank you for playing");
