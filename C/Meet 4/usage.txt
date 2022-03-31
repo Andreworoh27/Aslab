@@ -1,0 +1,10 @@
+601#iv18-1#Teaching Schedule
+602#ix19-2#Test Room
+604#Cindy#Pengerjaan Tugas Kelompok
+606#RY18-2#Patching Room
+609#Megan#Diskusi Kelompok
+625#Puti#Kerjain Project
+627#NH19-1#Repairing Room
+630#Charlie#Kerjain Project Database
+631#Budi#Do Project
+708#jp20-2#Teaching Data Mining
