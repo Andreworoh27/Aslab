@@ -5,10 +5,10 @@
 
 // global Variable :
 char map[10][10];
-int x,y,target,total_move=0,TargetTempX,TargetTempY,TargetTempBoxX,TargetTempBoxY;
-int x_target[5],y_target[5];
+int x,y,target,total_move=0,TargetTempX,TargetTempY;
+int x_target[5],y_target[5],TargetTempBoxX[3]={0},TargetTempBoxY[3]={0};
 bool target_flag=false; 
-bool target_flag_box = false;
+int target_flag_box = 0;
 
 // utilites :
 void Generator(FILE *fp){
@@ -47,10 +47,18 @@ void Move(char input){
                 map[x+2][y] = '@';
                 map[x+1][y] = 'P';
                 map[x][y] = ' ';
-                target_flag_box = true;
-                TargetTempBoxX=x+2;
-                TargetTempBoxY=y;
-                target--;
+                target_flag_box++;
+                for (int i = 0; i < 3; i++)
+                {
+                    if(TargetTempBoxX[i]==0 && TargetTempBoxY[i]==0){
+                        TargetTempBoxX[i]=x+2;
+                        TargetTempBoxY[i]=y;
+                        target--;
+                        break;
+                    }
+                }
+                
+                
             }
             else if (map[x+2][y]=='@'){
                 return;
@@ -87,10 +95,16 @@ void Move(char input){
                 map[x][y-2] = '@';
                 map[x][y-1] = 'P';
                 map[x][y] = ' ';
-                target_flag_box = true;
-                TargetTempBoxX=x;
-                TargetTempBoxY=y-2;
-                target--;
+                target_flag_box++;
+                for (int i = 0; i < 3; i++)
+                {
+                    if(TargetTempBoxX[i]==0 && TargetTempBoxY[i]==0){
+                        TargetTempBoxX[i]=x;
+                        TargetTempBoxY[i]=y-2;
+                        target--;
+                        break;
+                    }
+                }
             }
             else if (map[x][y-2]=='@'){
                 return;
@@ -127,10 +141,16 @@ void Move(char input){
                 map[x-2][y] = '@';
                 map[x-1][y] = 'P';
                 map[x][y] = ' ';
-                target_flag_box = true;
-                TargetTempBoxX=x-2;
-                TargetTempBoxY=y;
-                target--;
+                target_flag_box++;
+                for (int i = 0; i < 3; i++)
+                {
+                    if(TargetTempBoxX[i]==0 && TargetTempBoxY[i]==0){
+                        TargetTempBoxX[i]=x-2;
+                        TargetTempBoxY[i]=y;
+                        target--;
+                        break;
+                    }
+                }
             }
             else if (map[x-2][y]=='@'){
                 return;
@@ -167,10 +187,16 @@ void Move(char input){
                 map[x][y+2] = '@';
                 map[x][y+1] = 'P';
                 map[x][y] = ' ';
-                target_flag_box = true;
-                TargetTempBoxX=x;
-                TargetTempBoxY=y+2;
-                target--;
+                target_flag_box++;
+                for (int i = 0; i < 3; i++)
+                {
+                    if(TargetTempBoxX[i]==0 && TargetTempBoxY[i]==0){
+                        TargetTempBoxX[i]=x;
+                        TargetTempBoxY[i]=y+2;
+                        target--;
+                        break;
+                    }
+                }
             }
             else if (map[x][y+2]=='@'){
                 return;
@@ -196,7 +222,6 @@ void Move(char input){
             map[x][y]=' ';
         }
         else if (map[x][y+1] =='#'){
-            puts("invalid");
             return;
         }
         y+=1;
@@ -205,13 +230,17 @@ void Move(char input){
         map[TargetTempX][TargetTempY] = '*';
         target_flag = false;
     }
-    if (target_flag_box == true){
-        if(map[TargetTempBoxX][TargetTempBoxY]==' '){
-            map[TargetTempBoxX][TargetTempBoxY] = '*';
-            target++;
-            target_flag_box=false;
+    if (target_flag_box > 0){
+        for (int i=0;i<3;i++){
+            if(map[TargetTempBoxX[i]][TargetTempBoxY[i]]==' '){
+                map[TargetTempBoxX[i]][TargetTempBoxY[i]] = '*';
+                target++;
+                target_flag_box--;
+                TargetTempBoxX[i] = TargetTempBoxY[i] = 0;
+            }
         }
     }
+    total_move++;
 }
 
 void MoveInput(){
