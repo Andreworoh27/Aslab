@@ -3,11 +3,14 @@
 #include<stdlib.h>
 #include<ctype.h>
 
+// global Variable :
 char map[10][10];
-int x,y,target,total_move=0,TargetTempX,TargetTempY;
+int x,y,target,total_move=0,TargetTempX,TargetTempY,TargetTempBoxX,TargetTempBoxY;
 int x_target[5],y_target[5];
 bool target_flag=false; 
+bool target_flag_box = false;
 
+// utilites :
 void Generator(FILE *fp){
     fscanf(fp,"%d %d\n",&y,&x);
     fscanf(fp,"%d\n",&target);
@@ -32,18 +35,21 @@ void Printmap(){
     }
 }
 
+// Movement input and logic :
 void Move(char input){
     bool tanda = false;
     if (target_flag==true){
         tanda = true;
     }
-
     if(input == 'S'){
         if(map[x+1][y]=='@'){
             if(map[x+2][y]=='*'){
                 map[x+2][y] = '@';
                 map[x+1][y] = 'P';
                 map[x][y] = ' ';
+                target_flag_box = true;
+                TargetTempBoxX=x+2;
+                TargetTempBoxY=y;
                 target--;
             }
             else if (map[x+2][y]=='@'){
@@ -81,6 +87,9 @@ void Move(char input){
                 map[x][y-2] = '@';
                 map[x][y-1] = 'P';
                 map[x][y] = ' ';
+                target_flag_box = true;
+                TargetTempBoxX=x;
+                TargetTempBoxY=y-2;
                 target--;
             }
             else if (map[x][y-2]=='@'){
@@ -101,7 +110,6 @@ void Move(char input){
             target_flag=true;
             map[x][y-1]='P';
             map[x][y]=' ';
-            puts("triggerd A");
         }
         else if (map[x][y-1] == ' '){
             map[x][y-1]='P';
@@ -119,6 +127,9 @@ void Move(char input){
                 map[x-2][y] = '@';
                 map[x-1][y] = 'P';
                 map[x][y] = ' ';
+                target_flag_box = true;
+                TargetTempBoxX=x-2;
+                TargetTempBoxY=y;
                 target--;
             }
             else if (map[x-2][y]=='@'){
@@ -156,6 +167,9 @@ void Move(char input){
                 map[x][y+2] = '@';
                 map[x][y+1] = 'P';
                 map[x][y] = ' ';
+                target_flag_box = true;
+                TargetTempBoxX=x;
+                TargetTempBoxY=y+2;
                 target--;
             }
             else if (map[x][y+2]=='@'){
@@ -191,6 +205,13 @@ void Move(char input){
         map[TargetTempX][TargetTempY] = '*';
         target_flag = false;
     }
+    if (target_flag_box == true){
+        if(map[TargetTempBoxX][TargetTempBoxY]==' '){
+            map[TargetTempBoxX][TargetTempBoxY] = '*';
+            target++;
+            target_flag_box=false;
+        }
+    }
 }
 
 void MoveInput(){
@@ -210,7 +231,6 @@ void MoveInput(){
         for(int i=0;input[i]!='\0';i++){
             input[i]=toupper(input[i]);
         }
-        printf("%s\n",input);
         if(strcmp(input,"ESC")==0){
             return;
         }
@@ -230,6 +250,7 @@ void MoveInput(){
     MoveInput();
 }
 
+// Leveling function :
 void Level1(){
     FILE *fp = fopen("./map1.txt","r");
     Generator(fp);
@@ -251,6 +272,7 @@ void Level3(){
     fclose(fp);
 }
 
+// game menu and main menu :
 void Game(){
     puts("1. Level 1");
     puts("2. Level 2");
