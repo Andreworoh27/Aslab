@@ -41,9 +41,11 @@ public class Main {
             case 4:
                 cls();
                 sell();
+                break;
             case 5:
                 System.out.println("Thankyou for playing");
                 System.exit(1);
+                break;
             default:
                 System.out.println("Invalid Input");
                 break;
@@ -175,7 +177,7 @@ public class Main {
         System.out.print(">> ");
         int input = 0;
         try {
-            scan.nextInt();
+            input = scan.nextInt();
         } catch (Exception e) {
             System.out.println("Invalid input");
         }
