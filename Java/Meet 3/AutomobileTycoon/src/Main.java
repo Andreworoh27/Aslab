@@ -18,7 +18,13 @@ public class Main {
         System.out.println("4. Sell Automobile");
         System.out.println("5. Exit");
         System.out.print(">> ");
-        int input = scan.nextInt();scan.nextLine();
+        int input = 0;
+        try {
+            input = scan.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+        }
+        scan.nextLine();
         switch (input) {
             case 1:
                 cls();
@@ -52,7 +58,13 @@ public class Main {
         System.out.println("1. Hire Handyman for " + price);
         System.out.println("2. Back");
         System.out.print(">> ");
-        int input = scan.nextInt();scan.nextLine();
+        int input =0;
+        try {
+            input = scan.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+        }
+        scan.nextLine();
         switch (input) {
             case 1:
                 if(player.getMoney()<price){
@@ -80,7 +92,13 @@ public class Main {
         System.out.println("2. Produce Motorcycles with Level "+player.getMtr_prdct_lvl() + " production line");
         System.out.println("3. Back");
         System.out.print(">> ");
-        int input = scan.nextInt();scan.nextLine();
+        int input = 0;
+        try {
+            input = scan.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+        }
+        scan.nextLine();
         int produced ;
         switch (input) {
             case 1:
@@ -110,7 +128,13 @@ public class Main {
         System.out.println("1. Upgrade Car Production Line for " + price_car);
         System.out.println("2. Upgrade Motorcycle Production line for " + price_mtr);
         System.out.println("3. Back");
-        int input = scan.nextInt();scan.nextLine();
+        int input = 0;
+        try {
+            input = scan.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+        }
+        scan.nextLine();
         switch (input) {
             case 1:
                 if(player.getMoney() < price_car){
@@ -149,7 +173,13 @@ public class Main {
         System.out.println("2. Sell motorcycles");
         System.out.println("3. Back");
         System.out.print(">> ");
-        int input = scan.nextInt();scan.nextLine();
+        int input = 0;
+        try {
+            scan.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+        }
+        scan.nextLine();
         switch (input) {
             case 1:
                 System.out.println("Input number of car to sale :");
