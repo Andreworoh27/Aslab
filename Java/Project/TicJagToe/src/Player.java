@@ -5,13 +5,8 @@ import javax.lang.model.element.Name;
 public class Player {
     private String name = "";
     private String password = "";
-    Player(){
-        // Scanner scan = new Scanner(System.in);
-        // name = scan.nextLine();
-        // System.out.println(name);
-        // System.out.println(name.matches("[A-Za-z0-9]+"));
-        // System.out.println(name.matches("[0-9]+"));
-    }
+    private int score = 0;
+    Player(){}
 
     // setter
     public void setName(String name) {
@@ -19,5 +14,19 @@ public class Player {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    // getter
+    public String getName() {
+        return name;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public int getScore() {
+        return score;
     }
 }
