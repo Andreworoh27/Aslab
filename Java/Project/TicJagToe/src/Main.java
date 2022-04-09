@@ -14,6 +14,7 @@ public class Main {
     }
 
     void Menu(){
+        cls();
         System.out.println("===============");
         System.out.println("| Tic-Jag-Toe |");
         System.out.println("===============");
@@ -30,12 +31,13 @@ public class Main {
         }
         switch (input) {
             case 1:
-                login();
+                login();scan.nextLine();
                 break;
             case 2:
                 register();
                 break;
             case 3:
+                System.out.println("Thankyou for playing");
                 System.exit(1);
                 break;
             default:
@@ -45,20 +47,19 @@ public class Main {
     }
     
     void login(){
-        // input validation
+        cls();
         if(playeridx == 0){
             System.out.println("no account to login");
             return;
         }
         String name , password;
-        System.out.println("Input name [type '0' to go back] : ");
+        System.out.print("Input name [type '0' to go back] : ");
         name = scan.nextLine();
         if (name.equals("0")){
             return;
         }
-        System.out.println("Input password [type '0' to go back] : ");
+        System.out.print("Input password [type '0' to go back] : ");
         password = scan.nextLine();
-        System.out.println(password.equals("0"));
         if (password.equals("0")){
             return;
         }
@@ -72,9 +73,19 @@ public class Main {
             if(!player.getPassword(i).equals(password)){
                 password_false = true;
             }
-            if(name_false == false && password_false == false){
-                player1 = i;
+            if(name_false == false && password_false == false && i!= player1){
+                if(player1==-1){
+                    player1 = i;
+                }
+                else{
+                    player2 = i;
+                }
                 break;
+            }
+            else if (name_false == false && password_false == false && i== player1){
+                System.out.println("[!] You can't use the same account on second player");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                name_false = true;
             }
         }
 
@@ -82,13 +93,17 @@ public class Main {
             System.out.println("Wrong username or password");
             login();
         }
-        else if (name_false == false && password_false == false){
+        else if (name_false == false && password_false == false && player2==-1){
             gamemenu();
+        }
+        else if(name_false == false && password_false == false && player2!=-1){
+            return;
         }
         return;
     }
 
     void register(){
+        cls();
         String name;
         do{
             System.out.print("Input name to play [more than 3 and less than 15 characters] : ");
@@ -126,6 +141,7 @@ public class Main {
     }
 
     void gamemenu(){
+        cls();
         System.out.println("=================");
         System.out.println("|  Tic-Jag-Toe  |");
         System.out.println("=================");
@@ -145,7 +161,7 @@ public class Main {
                 play();
                 break;
             case 2:
-                // Scoreboard();
+                Scoreboard();
                 break;
             case 3:
                 return;
@@ -156,7 +172,18 @@ public class Main {
         gamemenu();
     }
 
+    void Scoreboard(){
+        System.out.println("ScoreBoard :");
+        for (int i=0;i<playeridx;i++){
+            System.out.println("Name    : "+player.getName(i));
+            System.out.println("Score   : "+player.getScore(i));
+            System.out.printf("\n\n");
+        }
+        System.out.println("Press enter to continue...");scan.nextLine();
+    }
+
     void play(){
+        cls();
         System.out.println("Player Detail :");
         System.out.println("Name    : " + player.getName(player1));
         System.out.println("Score   : " + player.getScore(player1));
@@ -205,6 +232,12 @@ public class Main {
                 else{
                     turn = 1;
                 }
+                if(playeridx == 1){
+                    System.out.println("Create an account first");
+                    register();
+                }
+                System.out.println("Player 2 login : ");
+                login();
                 pvp();
                 reset();
                 break;
@@ -222,6 +255,7 @@ public class Main {
     ArrayList<Integer> move2 = new ArrayList<>();
 
     void easy(){
+        cls();
         printboard();
         movehistory();
         int input,x=0,y=0;
@@ -304,6 +338,7 @@ public class Main {
     }
 
     void hard(){
+        cls();
         printboard();
         movehistory();
         int input,x=0,y=0;
@@ -374,6 +409,7 @@ public class Main {
                 int score = player.getScore(player1);
                 player.setScore((score-10), player1);
             }
+            reset();
             return;
         }
         hard();
@@ -405,7 +441,108 @@ public class Main {
     }
     
     void pvp(){
+        cls();
+        int input,x=0,y=0;
+        if(turn == 1){
+            printboard();
+            movehistory(1);
+            System.out.println(player.getName(player1)+" Turn :");
+            do{
+                System.out.println("Your move : ");
+                System.out.println("Choose [1-9] >>");
+                input = scan.nextInt();scan.nextLine();
+                if(movevalidation(input)){
+                    break;
+                }
+                System.out.println("Invalid move");
+            }while(true);
 
+            if(input>=1 && input<=3){
+                x=0;
+                y=input-1;
+            }
+            else if (input>=4 && input<=6){
+                x=1;
+                y=input-4;
+            }
+            else if (input>=7 && input<=9){
+                x=2;
+                y=input-7;
+            }
+            move1.add(input);
+            move(x,y,turn);
+            turn = 2;
+        }
+        else{
+            printboard();
+            movehistory(1);
+            System.out.println(player.getName(player2)+" Turn :");
+            do{
+                System.out.println("Your move : ");
+                System.out.println("Choose [1-9] >>");
+                input = scan.nextInt();scan.nextLine();
+                if(movevalidation(input)){
+                    break;
+                }
+                System.out.println("Invalid move");
+            }while(true);
+
+            if(input>=1 && input<=3){
+                x=0;
+                y=input-1;
+            }
+            else if (input>=4 && input<=6){
+                x=1;
+                y=input-4;
+            }
+            else if (input>=7 && input<=9){
+                x=2;
+                y=input-7;
+            }
+            move2.add(input);
+            move(x,y,turn);
+            turn = 1;
+        }
+        if(wincondition()){
+            if (winner == -1) {
+                System.out.println("Draw");
+            }
+            else if(winner == 1){
+                System.out.println("[*]"+player.getName(player1)+" Wins!");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                int score = player.getScore(player1);
+                player.setScore((score+10), player1);
+                score = player.getScore(player1);
+                player.setScore((score-10), player2);
+            }
+            else if(winner == 2){
+                System.out.println("[*]"+player.getName(player2)+" Wins!");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                int score = player.getScore(player2);
+                player.setScore((score+10), player2);
+                score = player.getScore(player1);
+                player.setScore((score-10), player1);
+            }
+            reset();
+            return;
+        }
+        pvp();
+        return;
+    }
+
+    void movehistory(int x){
+        System.out.println(player.getName(player1)+" moves :");
+        for (int i=0;i<move1.size();i++){
+            System.out.println("X on "+move1.get(i));
+        }
+
+        System.out.printf("\n\n");
+        System.out.println(player.getName(player2)+" moves :");
+        for (int i=0;i<move2.size();i++){
+            System.out.println("O on "+move2.get(i));
+        }
+        System.out.printf("\n\n");
+        return;
     }
 
     void movehistory(){
@@ -553,9 +690,11 @@ public class Main {
         System.out.println("---|---|---|");                                     
         System.out.printf(" %c | %c | %c |\n",map[2][0],map[2][1],map[2][2]);   
     }
+
     int generate_random(int max,int min){
         return (int)(Math.random()*(max - min) + min);
     }
+
     void delay(int time){
         try {
             Thread.sleep(time);
@@ -563,10 +702,12 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     void cls(){
         System.out.print("\033[H\033[2J");  
         System.out.flush();  
     }
+
     public static void main(String[] args) throws Exception {
         new Main();
     }

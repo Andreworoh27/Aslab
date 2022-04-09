@@ -1,8 +1,4 @@
 import java.util.ArrayList;
-import java.util.Scanner;
-
-import javax.lang.model.element.Name;
-
 public class Player {
     private ArrayList <String> name = new ArrayList<>();
     private ArrayList <String> password = new ArrayList<>();
