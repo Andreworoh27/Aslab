@@ -1,10 +1,14 @@
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     Scanner scan = new Scanner(System.in);
     Player player = new Player();
+    Character[][] mapawal = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
     Character[][] map = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
+    int playeridx=0;
+    int player1=-1,player2=-1;
     Main(){
         Menu();
     }
@@ -42,14 +46,13 @@ public class Main {
     
     void login(){
         // input validation
-        if(player.getName().isEmpty()){
+        if(playeridx == 0){
             System.out.println("no account to login");
             return;
         }
         String name , password;
         System.out.println("Input name [type '0' to go back] : ");
         name = scan.nextLine();
-        System.out.println(name.equals("0"));
         if (name.equals("0")){
             return;
         }
@@ -59,17 +62,24 @@ public class Main {
         if (password.equals("0")){
             return;
         }
+
         boolean password_false = false,name_false = false;
-        if(!player.getName().equals(name)){
-            System.out.println("Wrong username!");
-            name_false = true;
-        }
-        if(!player.getPassword().equals(password)){
-            System.out.println("Wrong password!");
-            password_false = true;
+        for (int i = 0; i < playeridx; i++) {
+            password_false = false;name_false = false;
+            if(!player.getName(i).equals(name)){
+                name_false = true;
+            }
+            if(!player.getPassword(i).equals(password)){
+                password_false = true;
+            }
+            if(name_false == false && password_false == false){
+                player1 = i;
+                break;
+            }
         }
 
         if(name_false == true || password_false == true){
+            System.out.println("Wrong username or password");
             login();
         }
         else if (name_false == false && password_false == false){
@@ -79,26 +89,20 @@ public class Main {
     }
 
     void register(){
-        if(!player.getName().isEmpty()){
-            System.out.println("You already have an account!");
-            return;
-        }
-
         String name;
         do{
             System.out.print("Input name to play [more than 3 and less than 15 characters] : ");
-            name = scan.nextLine();scan.nextLine();
+            name = scan.nextLine();
             if(name.length() > 3 && name.length() < 15){
                 break;
             }
         }while(true);
-        player.setName(name);
+        player.addName(name);;
         
         String password;
-        // doesn't have alphanumeric character validation
         do {
             System.out.print("Input password [alphanumeric & more than 5 characters] : ");
-            password = scan.nextLine();scan.nextLine();
+            password = scan.nextLine();
             boolean number = false,alphabet= false,logo = false;
             for(int i=0;i<password.length();i++){
                 if((password.charAt(i)>='a' && password.charAt(i)<= 'z') || (password.charAt(i)>='A' && password.charAt(i)<= 'Z')){
@@ -116,7 +120,9 @@ public class Main {
                 break;
             }
         } while (true);
-        player.setPassword(password);
+        player.addPassword(password);;;
+        player.addScore(0);
+        playeridx++;
     }
 
     void gamemenu(){
@@ -152,8 +158,8 @@ public class Main {
 
     void play(){
         System.out.println("Player Detail :");
-        System.out.println("Name    : " + player.getName());
-        System.out.println("Score   : " + player.getScore());
+        System.out.println("Name    : " + player.getName(player1));
+        System.out.println("Score   : " + player.getScore(player1));
         System.out.println("=================================");
         System.out.println("Select difficulty :");
         System.out.println("1. Easy");
@@ -180,6 +186,27 @@ public class Main {
                     turn = 1;
                 }
                 easy();
+                reset();
+                break;
+            case 2:
+                if(generate_random(3, 1) == 2){
+                    turn = 2;
+                }
+                else{
+                    turn = 1;
+                }
+                hard();
+                reset();
+                break;
+            case 3:
+                if(generate_random(3, 1) == 2){
+                    turn = 2;
+                }
+                else{
+                    turn = 1;
+                }
+                pvp();
+                reset();
                 break;
             case 4:
                 return;
@@ -189,16 +216,26 @@ public class Main {
         play();
     }
 
-    int turn ;
+    int turn=0;
+    int winner=0;
+    ArrayList<Integer> move1 = new ArrayList<>();
+    ArrayList<Integer> move2 = new ArrayList<>();
+
     void easy(){
         printboard();
-        System.out.println("");
-        System.out.println("Your move : ");
-        System.out.println("Enemy moves :");
+        movehistory();
         int input,x=0,y=0;
         if(turn==1){
-            System.out.println("Choose [1-9] >>");
-            input = scan.nextInt();scan.nextLine();
+            do{
+                System.out.println("Your move : ");
+                System.out.println("Choose [1-9] >>");
+                input = scan.nextInt();scan.nextLine();
+                if(movevalidation(input)){
+                    break;
+                }
+                System.out.println("Invalid move");
+            }while(true);
+
             if(input>=1 && input<=3){
                 x=0;
                 y=input-1;
@@ -211,13 +248,97 @@ public class Main {
                 x=2;
                 y=input-7;
             }
+            move1.add(input);
             move(x,y,turn);
             turn = 2;
         }
         else{
+            System.out.println("Enemy moves :");
             System.out.print("Computer choose ");
             delay(1000);
-            input = generate_random(10, 1);
+            do{
+                input = generate_random(10, 1);
+                if(movevalidation(input)){
+                    break;
+                }
+            }while(true);
+                System.out.println(input);
+            if(input>=1 && input<=3){
+                x=0;
+                y=input-1;
+            }
+            else if (input>=4 && input<=6){
+                x=1;
+                y=input-4;
+            }
+            else if (input>=7 && input<=9){
+                x=2;
+                y=input-7;
+            }
+            move2.add(input);
+            move(x,y,turn);
+            turn = 1;
+            delay(2000);
+        }
+
+        if(wincondition()){
+            if (winner == -1) {
+                System.out.println("Draw");
+            }
+            else if(winner == 1){
+                System.out.println("[*] Player Wins!");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                int score = player.getScore(player1);
+                player.setScore((score+10), player1);
+            }
+            else if(winner == 2){
+                System.out.println("[*] Computer Wins!");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                int score = player.getScore(player1);
+                player.setScore((score-10), player1);
+            }
+            return;
+        }
+        easy();
+        return;
+    }
+
+    void hard(){
+        printboard();
+        movehistory();
+        int input,x=0,y=0;
+        if(turn==1){
+            do{
+                System.out.println("Your move : ");
+                System.out.println("Choose [1-9] >>");
+                input = scan.nextInt();scan.nextLine();
+                if(movevalidation(input)){
+                    break;
+                }
+                System.out.println("Invalid move");
+            }while(true);
+
+            if(input>=1 && input<=3){
+                x=0;
+                y=input-1;
+            }
+            else if (input>=4 && input<=6){
+                x=1;
+                y=input-4;
+            }
+            else if (input>=7 && input<=9){
+                x=2;
+                y=input-7;
+            }
+            move1.add(input);
+            move(x,y,turn);
+            turn = 2;
+        }
+        else{
+            System.out.println("Enemy moves :");
+            System.out.print("Computer choose ");
+            delay(1000);
+            input = bothardmove();
             System.out.println(input);
             if(input>=1 && input<=3){
                 x=0;
@@ -231,12 +352,174 @@ public class Main {
                 x=2;
                 y=input-7;
             }
+            move2.add(input);
             move(x,y,turn);
             turn = 1;
             delay(2000);
         }
-        easy();
+
+        if(wincondition()){
+            if (winner == -1) {
+                System.out.println("Draw");
+            }
+            else if(winner == 1){
+                System.out.println("[*] Player Wins!");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                int score = player.getScore(player1);
+                player.setScore((score+100), player1);
+            }
+            else if(winner == 2){
+                System.out.println("[*] Computer Wins!");
+                System.out.println("Press enter to continue...");scan.nextLine();
+                int score = player.getScore(player1);
+                player.setScore((score-10), player1);
+            }
+            return;
+        }
+        hard();
         return;
+    }
+
+    int bothardmove(){
+        int x=0,y=0,input;
+        if(map[1][1]=='X' && move1.size()==1){
+            do {
+                input = generate_random(10, 1);
+                if(input%2==1 && input!=5 && movevalidation(input)){
+                    return input;
+                }
+            } while (true);
+        }
+        else if ((map[1][1]=='X'&& map[1][1]!='O') && move1.size()==1){
+            return 5;
+        }
+        else{
+            do{
+                input = generate_random(10, 1);
+                if(movevalidation(input)){
+                    break;
+                }
+            }while(true);
+            return input;
+        }
+    }
+    
+    void pvp(){
+
+    }
+
+    void movehistory(){
+        System.out.println("Player moves :");
+        for (int i=0;i<move1.size();i++){
+            System.out.println("X on "+move1.get(i));
+        }
+
+        System.out.printf("\n\n");
+        System.out.println("Enemy moves :");
+        for (int i=0;i<move2.size();i++){
+            System.out.println("O on "+move2.get(i));
+        }
+        System.out.printf("\n\n");
+        return;
+    }
+
+    boolean movevalidation(int input){
+        int x=0,y=0;
+        if(input>=1 && input<=3){
+            x=0;
+            y=input-1;
+        }
+        else if (input>=4 && input<=6){
+            x=1;
+            y=input-4;
+        }
+        else if (input>=7 && input<=9){
+            x=2;
+            y=input-7;
+        }
+        if (map[x][y]!='X' && map[x][y]!='O') {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    boolean wincondition(){
+        int full=0;
+        for (int i = 0; i < 3; i++) {
+            for(int j = 0 ;j < 3 ; j++){
+                if (map[i][j]=='X' || map[i][j]=='X') {
+                    full+=1;
+                }
+            }
+        }
+        if(full == 9){
+            winner= -1;
+            return true;
+        }
+        // horizontal
+        for (int i = 0; i < 3; i++) {
+            int counterx=0,countery=0;
+            for(int j = 0 ;j < 3 ; j++){
+                if(map[i][j]=='X'){
+                    counterx+=1;
+                }
+                else if (map[i][j]=='O'){
+                    countery+=1;
+                }
+            }
+            if(counterx == 3){
+                winner = 1;
+                return true;
+            }
+            if(countery == 3){
+                winner = 2;
+                return true;
+            }
+        }
+
+        // vertical
+        for (int i = 0; i < 3; i++) {
+            int counterx=0,countery=0;
+            for(int j = 0 ;j < 3 ; j++){
+                if(map[j][i]=='X'){
+                    counterx+=1;
+                }
+                else if (map[j][i]=='O'){
+                    countery+=1;
+                }
+            }
+            if(counterx == 3){
+                winner = 1;
+                return true;
+            }
+            if(countery == 3){
+                winner = 2;
+                return true;
+            }
+        }
+
+        // diagonal
+        if(map[0][0]=='X' && map[1][1]=='X' && map[2][2]=='X'){
+            winner = 1;
+            return true;
+        }
+        else if(map[2][0]=='X' && map[1][1]=='X' && map[0][2]=='X'){
+            winner = 1;
+            return true;
+        }
+
+        if(map[0][0]=='O' && map[1][1]=='O' && map[2][2]=='O'){
+            winner = 2;
+            return true;
+        }
+        else if(map[2][0]=='O' && map[1][1]=='O' && map[0][2]=='O'){
+            winner = 2;
+            return true;
+        }
+
+        return false;
     }
 
     void move(int x,int y,int turn){
@@ -246,6 +529,19 @@ public class Main {
         else{
             map[x][y]='O';
         }
+        return;
+    }
+
+    void reset(){
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                mapawal[i][j] = map[i][j];
+            }
+        }
+        move1.removeAll(move1);
+        move2.removeAll(move2);
+        winner = 0;
+        turn = 0;
         return;
     }
 
