@@ -40,4 +40,52 @@ public class Player {
     public void addScore(int score) {
         this.score.add(score);
     }
+
+    void quicksort(int left,int right){
+        if (left > right){
+            return;
+        }
+        Integer pivot=score.get(right);
+        int idx=left;
+        for (int i=left;i<right;i++){
+            if (score.get(i)>=pivot){
+                String tempString;
+                Integer tempInteger;
+                // name
+                tempString = name.get(i);
+                name.set(i, name.get(idx));
+                name.set(idx, tempString);
+
+                // score
+                tempInteger = score.get(i);
+                score.set(i, score.get(idx));
+                score.set(idx, tempInteger);
+
+                // passworrd
+                tempString = password.get(i);
+                password.set(i, password.get(idx));
+                password.set(idx, tempString);
+
+                idx+=1;
+            }
+        }
+        String tempString;
+        Integer tempInteger;
+        // name
+        tempString = name.get(idx);
+        name.set(idx, name.get(right));
+        name.set(right, tempString);
+
+        // score
+        tempInteger = score.get(idx);
+        score.set(idx, score.get(right));
+        score.set(right, tempInteger);
+
+        // passworrd
+        tempString = password.get(idx);
+        password.set(idx, password.get(right));
+        password.set(right, tempString);
+        quicksort(left,(idx-1));
+        quicksort((idx+1),right);
+    }
 }

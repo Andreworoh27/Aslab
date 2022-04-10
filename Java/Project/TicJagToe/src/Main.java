@@ -173,6 +173,7 @@ public class Main {
     }
 
     void Scoreboard(){
+        player.quicksort(0,(playeridx-1));
         System.out.println("ScoreBoard :");
         for (int i=0;i<playeridx;i++){
             System.out.println("Name    : "+player.getName(i));
