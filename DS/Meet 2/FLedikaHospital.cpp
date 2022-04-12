@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include<unistd.h>
 #include<time.h>
 #ifdef _WIN32
 #include <Windows.h>
@@ -33,7 +32,7 @@ struct History
     History *next,*prev;
 }*headhistory,*tailhistory;
 
-int totalpatient = 4;
+int totalpatient = 0;
 
 Patient* createnewpatient(const char id[],const char name[],const char prioritystring[],int priority){
     Patient* temp = (Patient*)malloc(sizeof(Patient));
