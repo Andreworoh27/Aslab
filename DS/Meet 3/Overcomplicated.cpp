@@ -31,6 +31,14 @@ void resetcolor(){
     printf("\033[0m");
 }
 
+void reset(){
+    attemp = 0;
+    strcpy(answer,"\0");
+    for (int i=0;i<6;i++){
+        strcpy(history[i],"\0");
+    }
+}
+
 unsigned long djb2(const char *str) {
     unsigned long hash = 5381;
 
@@ -106,6 +114,7 @@ void play(){
             printf("%s\n",input);
             resetcolor();
             puts("You got the word!");
+            puts("Press enter to continue...");getchar();
             return;
         }
         strcpy(history[attemp],input);
@@ -184,6 +193,7 @@ void menu(){
     case 1:
         word();
         play();
+        reset();
         break;
     case 2:
         exit(1);
