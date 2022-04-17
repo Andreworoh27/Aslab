@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 *.docx
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,windows,visualstudiocode,java
 C/Project/sokoban
+
+DS/Project/soal/
