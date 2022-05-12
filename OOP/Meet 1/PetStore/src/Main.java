@@ -332,7 +332,7 @@ public class Main {
     void sortdogprice(){
         for(int i = 0; i < dog.size(); i++){
             for(int j = 0; j < dog.size() - 1 - i; j++){
-                if(dog.get(j).getPrice() < dog.get(j+1).getPrice()){
+                if(dog.get(j).getPrice() > dog.get(j+1).getPrice()){
                     Dog tempdog = dog.get(j+1);
                     dog.set(j+1, dog.get(j));
                     dog.set(j, tempdog);
